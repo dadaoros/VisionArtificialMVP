@@ -7,4 +7,7 @@ public interface PresenterOps {
     public interface PhotosListOps{
         public void loadPhotos();
     }
+    public interface MainViewOps{
+        public void saveActualPhoto();
+    }
 }

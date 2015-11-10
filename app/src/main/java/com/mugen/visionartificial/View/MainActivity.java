@@ -8,13 +8,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.mugen.visionartificial.Model.ImageFileManager;
+import com.mugen.visionartificial.Model.PixelImage;
 import com.mugen.visionartificial.R;
 
 import java.io.File;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
     PhotoListFragment listFragment;
     String mCurrentPhotoPath;
     String mCurrentPhotoName;
-    //FullScreenImageFragment imageFragment;
+    FullScreenImageFragment imageFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +55,13 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_PICK_IMAGE:
-                    //TODO showFullScreen(getRealImagePath(data.getData()));
+                    displayFullScreen(getRealImagePath(data.getData()));
+                    //TODO
                     break;
                 case REQUEST_TAKE_PHOTO:
                     //listFragment.update();
-                    //TODO showFullScreen(mCurrentPhotoPath);
+                    displayFullScreen(mCurrentPhotoPath);
+                    //TODO
                     break;
                 default:
                     break;
@@ -79,18 +81,6 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
     public void onStop(){
         super.onStop();
     }
-    /*
-    public void showFullScreen(String path){
-        Bundle bundle=new Bundle();
-        bundle.putString(MainActivity.PHOTO_PATH_KEY,path);
-        imageFragment= new FullScreenImageFragment();
-        imageFragment.setArguments(bundle);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, imageFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commitAllowingStateLoss();
-    }*/
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -102,32 +92,33 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.activity_menu_item:
-                attemptPhoto();
-                return true;
-
-            case R.id.action_save_item:
-                /*
-                if(imageFragment!=null){
-                    PixelImage p= imageFragment.getPixelImage();
-                    String fName=new File(p.getPhotoPath()).getName();
-                    try {
-                        String newPath=ImageFileManager.getImageFileManager().savePhoto(imageFragment.getActualBitmap(),fName,p.getFlag());
-                        galleryAddPic(newPath);
-                        Toast.makeText(this, "File succesfully saved", Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(this,"Failed to save",Toast.LENGTH_SHORT).show();
-                    }
-
-                }*/
+                onPhotoAttempt();
                 return true;
             case R.id.action_pick_photo:
-                pickImage();
+                onPickImageFromGallery();
+                return true;
+            case R.id.action_save_item:
+                onSaveActualPhoto();
                 return true;
             case R.id.action_settings:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+    private void onSaveActualPhoto() {
+
+        if(imageFragment!=null) {
+            PixelImage p = imageFragment.getPixelImage();
+            String fName = new File(p.getPhotoPath()).getName();
+            try {
+                String newPath = ImageFileManager.getImageFileManager().savePhoto(imageFragment.getActualBitmap(), fName, p.getFlag());
+                galleryAddPic(newPath);
+                Toast.makeText(this, "File succesfully saved", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to save", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -141,24 +132,24 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
     }
 
     @Override
-    public void attemptPhoto() {
+    public void onPhotoAttempt() {
         if(getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
             dispatchTakePictureIntent();
             galleryAddPic(mCurrentPhotoPath);
         }else{
-            Toast.makeText(getApplicationContext(),
-                    "You need a Camera if you want to take a picture", Toast.LENGTH_SHORT)
-                    .show();
+            onPhotoAttemptFailed("You need a Camera if you want to take a picture");
         }
     }
 
     @Override
-    public void photoAttemptFailed() {
-
+    public void onPhotoAttemptFailed(String message) {
+        Toast.makeText(getApplicationContext(),
+                message, Toast.LENGTH_SHORT)
+                .show();
     }
 
     @Override
-    public void pickImage() {
+    public void onPickImageFromGallery() {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, REQ_CODE_PICK_IMAGE);
@@ -166,6 +157,18 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
 
     @Override
     public void displayFullScreen(String path) {
+        Bundle bundle=new Bundle();
+        bundle.putString(MainActivity.PHOTO_PATH_KEY,path);
+        imageFragment= new FullScreenImageFragment();
+        imageFragment.setArguments(bundle);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.container, imageFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    @Override
+    public void onPhotoSaveResult(String message) {
 
     }
 
@@ -182,11 +185,11 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
                 mCurrentPhotoName = photoFile.getName();
             } catch (IOException ex) {
                 // Error occurred while creating the File
-
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                takePictureIntent.putExtra(
+                        MediaStore.EXTRA_OUTPUT,
                         Uri.fromFile(photoFile));
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }

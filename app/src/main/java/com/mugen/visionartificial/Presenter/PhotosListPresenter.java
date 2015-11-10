@@ -3,7 +3,6 @@ package com.mugen.visionartificial.Presenter;
 import com.mugen.visionartificial.Model.ImageFileManager;
 import com.mugen.visionartificial.Model.Photo;
 import com.mugen.visionartificial.R;
-import com.mugen.visionartificial.View.SelfiesListAdapter;
 import com.mugen.visionartificial.View.ViewOps;
 
 import java.lang.ref.WeakReference;
