@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Vision Artificial</string>
+    <string name="action_settings">Settings</string>
+
+
+    <string name="day_week">DayWeek</string>
+    <string name="photolistload_success">Photos loaded Successfully</string>
+    <string name="photolistload_fail">You don\'t have any photos yet</string>
+</resources>

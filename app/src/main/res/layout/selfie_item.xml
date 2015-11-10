@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.root.billetesloteria.TicketFragment"
+    android:layout_height="wrap_content"
+    android:padding="3sp">
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:paddingTop="5dp"
+        android:src="@drawable/abc_ratingbar_full_material"/>
+    <TextView android:id="@+id/day_week"
+        android:textSize="25sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/image_view"
+        android:textStyle="bold"
+        android:text="@string/day_week"/>
+    <TextView android:id="@+id/photo_date"
+        android:paddingLeft="10sp"
+        android:paddingRight="3sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_below="@+id/day_week"
+        android:layout_toRightOf="@+id/image_view"
+        android:text="22/12/2014"/>
+
+    <TextView android:id="@+id/photo_name"
+        android:layout_below="@+id/photo_date"
+        android:textSize="18sp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:paddingLeft="10dp"
+        android:text="JPEG_20150321_155203_1333433940.jpg"/>
+
+
+</RelativeLayout>

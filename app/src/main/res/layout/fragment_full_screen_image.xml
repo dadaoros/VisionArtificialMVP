@@ -1,0 +1,54 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.project.coursera.visionArtificial.View.FullScreenImageFragment"
+    android:background="@color/button_material_dark">
+    <ImageButton
+        android:id="@+id/btnExit"
+        android:src="@drawable/ic_action_remove"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:padding="4sp"/>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/full_screen_imageview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5sp"
+            android:layout_gravity="top"
+            android:layout_above="@+id/buttonPanel"/>
+        <LinearLayout
+            android:id="@+id/buttonPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:background="#FFFFFF">
+            <ImageButton
+                android:id="@+id/button_borders"
+                android:src="@drawable/ic_action_not_important"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:background="@color/dark_style"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="1dp"/>
+            <ImageButton
+                android:id="@+id/button_letters"
+                android:src="@drawable/ic_action_brightness_auto"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:background="@color/dark_style"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+    </RelativeLayout>
+
+
+</FrameLayout>
