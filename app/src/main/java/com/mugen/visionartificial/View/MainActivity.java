@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.mugen.visionartificial.Model.ImageFileManager;
 import com.mugen.visionartificial.Model.PixelImage;
+import com.mugen.visionartificial.Presenter.MainOpsPresenter;
+import com.mugen.visionartificial.Presenter.PresenterOps;
 import com.mugen.visionartificial.R;
 
 import java.io.File;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
     String mCurrentPhotoPath;
     String mCurrentPhotoName;
     FullScreenImageFragment imageFragment;
+    MainOpsPresenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
 
     }
     private void initialize(){
+        presenter=new MainOpsPresenter(this);
         if(listFragment==null) {
             listFragment = new PhotoListFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -55,12 +59,12 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_PICK_IMAGE:
-                    displayFullScreen(getRealImagePath(data.getData()));
+                    onDisplayFullScreen(getRealImagePath(data.getData()));
                     //TODO
                     break;
                 case REQUEST_TAKE_PHOTO:
                     //listFragment.update();
-                    displayFullScreen(mCurrentPhotoPath);
+                    onDisplayFullScreen(mCurrentPhotoPath);
                     //TODO
                     break;
                 default:
@@ -72,8 +76,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
         String[] filePathColumn = {MediaStore.Images.Media.DATA};
         Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
         cursor.moveToFirst();
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String filePath = cursor.getString(columnIndex);
+        String filePath = cursor.getString(cursor.getColumnIndex(filePathColumn[0]));
         cursor.close();
         return filePath;
     }
@@ -107,21 +110,10 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
         }
     }
     private void onSaveActualPhoto() {
-
         if(imageFragment!=null) {
-            PixelImage p = imageFragment.getPixelImage();
-            String fName = new File(p.getPhotoPath()).getName();
-            try {
-                String newPath = ImageFileManager.getImageFileManager().savePhoto(imageFragment.getActualBitmap(), fName, p.getFlag());
-                galleryAddPic(newPath);
-                Toast.makeText(this, "File succesfully saved", Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Failed to save", Toast.LENGTH_SHORT).show();
-            }
+            presenter.saveActualPhoto(imageFragment.getPixelImage(),imageFragment.getActualBitmap());
         }
     }
-
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0 ){
@@ -131,11 +123,10 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
         }
     }
 
-    @Override
     public void onPhotoAttempt() {
         if(getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
             dispatchTakePictureIntent();
-            galleryAddPic(mCurrentPhotoPath);
+            addPicturetoGallery(Uri.fromFile(new File(mCurrentPhotoPath)));
         }else{
             onPhotoAttemptFailed("You need a Camera if you want to take a picture");
         }
@@ -143,12 +134,9 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
 
     @Override
     public void onPhotoAttemptFailed(String message) {
-        Toast.makeText(getApplicationContext(),
-                message, Toast.LENGTH_SHORT)
-                .show();
+        Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
     public void onPickImageFromGallery() {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
@@ -156,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
     }
 
     @Override
-    public void displayFullScreen(String path) {
+    public void onDisplayFullScreen(String path) {
         Bundle bundle=new Bundle();
         bundle.putString(MainActivity.PHOTO_PATH_KEY,path);
         imageFragment= new FullScreenImageFragment();
@@ -169,9 +157,15 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
 
     @Override
     public void onPhotoSaveResult(String message) {
-
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void addPicturetoGallery(Uri uri) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        mediaScanIntent.setData(uri);
+        this.sendBroadcast(mediaScanIntent);
+    }
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -179,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
+            //TODO create photofile in the Model
             try {
                 photoFile = ImageFileManager.getImageFileManager().createImageFile(NAMETAG_REGULAR);
                 mCurrentPhotoPath=photoFile.getAbsolutePath();
@@ -197,27 +192,13 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
 
     }
 
-    /**
-     * Return the Activity context.
-     */
     @Override
     public Context getActivityContext() {
         return this;
     }
-
-    /**
-     * Return the Application context.
-     */
     @Override
     public Context getApplicationContext() {
         return super.getApplicationContext();
-    }
-    public void galleryAddPic(String mCurrentPhotoPath) {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
     }
 
 

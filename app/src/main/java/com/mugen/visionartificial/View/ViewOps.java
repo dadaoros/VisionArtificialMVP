@@ -1,6 +1,7 @@
 package com.mugen.visionartificial.View;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.widget.ArrayAdapter;
 
 import java.util.List;
@@ -10,11 +11,10 @@ import java.util.List;
  */
 public interface ViewOps {
     interface MainViewOps extends ContextView{
-        void onPhotoAttempt();
         void onPhotoAttemptFailed(String Message);
-        void onPickImageFromGallery();
-        void displayFullScreen(String path);
+        void onDisplayFullScreen(String path);
         public void onPhotoSaveResult(String message);
+        void addPicturetoGallery(Uri uri);
     }
     interface FullScreenOps extends ContextView{
         public void showProgressBar(String message);

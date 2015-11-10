@@ -49,7 +49,6 @@ public class FullScreenImageFragment extends Fragment implements ViewOps.FullScr
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =inflater.inflate(R.layout.fragment_full_screen_image, container, false);
-        imageView = (ImageView) view.findViewById(R.id.full_screen_imageview);
         btnClose= (ImageButton)view.findViewById(R.id.btnExit);
         bordersBtn=(ImageButton)view.findViewById(R.id.button_borders);
         lettersBtn=(ImageButton)view.findViewById(R.id.button_letters);
@@ -79,8 +78,9 @@ public class FullScreenImageFragment extends Fragment implements ViewOps.FullScr
     @Override
     public void onResume(){
         super.onResume();
-        Log.d(TAG, "On Resume");
         if(imageView==null) {
+            imageView = (ImageView) getActivity().findViewById(R.id.full_screen_imageview);
+
             presenter.toGrayScale(pixelImage);
         }
     }
@@ -112,7 +112,7 @@ public class FullScreenImageFragment extends Fragment implements ViewOps.FullScr
 
     @Override
     public Context getActivityContext() {
-        return this.getActivityContext();
+        return this.getActivity();
     }
 
     @Override
