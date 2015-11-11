@@ -18,7 +18,6 @@ public class Photo {
     private Date datetime;
     public Photo(String name, Date datetime, Bitmap mini, String path){
         this.name = name;
-
         this.datetime = datetime;
         this.mini = mini;
         this.path = path;

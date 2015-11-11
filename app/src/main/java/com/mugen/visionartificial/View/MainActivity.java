@@ -22,13 +22,10 @@ import com.mugen.visionartificial.R;
 import java.io.File;
 import java.io.IOException;
 
-
-
 public class MainActivity extends AppCompatActivity implements ViewOps.MainViewOps,ContextView{
     static final String TAG="Main Activity";
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int REQ_CODE_PICK_IMAGE=2;
-    static final String NAMETAG_REGULAR="REGULAR";
     public static final String PHOTO_PATH_KEY = "photo path";
     PhotoListFragment listFragment;
     String mCurrentPhotoPath;
@@ -59,13 +56,10 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_PICK_IMAGE:
-                    onDisplayFullScreen(getRealImagePath(data.getData()));
-                    //TODO
+                    navigateToDisplayOnFullScreen(getRealImagePath(data.getData()));
                     break;
                 case REQUEST_TAKE_PHOTO:
-                    //listFragment.update();
-                    onDisplayFullScreen(mCurrentPhotoPath);
-                    //TODO
+                    navigateToDisplayOnFullScreen(mCurrentPhotoPath);
                     break;
                 default:
                     break;
@@ -95,10 +89,10 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.activity_menu_item:
-                onPhotoAttempt();
+                navigateToPhotoAttempt();
                 return true;
             case R.id.action_pick_photo:
-                onPickImageFromGallery();
+                navigateToPickImageFromGallery();
                 return true;
             case R.id.action_save_item:
                 onSaveActualPhoto();
@@ -122,8 +116,17 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
             super.onBackPressed();
         }
     }
+    @Override
+    public void onPhotoAttemptFailed(String message) {
+        Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
+    }
 
-    public void onPhotoAttempt() {
+    public void navigateToPickImageFromGallery() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, REQ_CODE_PICK_IMAGE);
+    }
+    public void navigateToPhotoAttempt() {
         if(getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
             dispatchTakePictureIntent();
             addPicturetoGallery(Uri.fromFile(new File(mCurrentPhotoPath)));
@@ -131,20 +134,8 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
             onPhotoAttemptFailed("You need a Camera if you want to take a picture");
         }
     }
-
     @Override
-    public void onPhotoAttemptFailed(String message) {
-        Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
-    }
-
-    public void onPickImageFromGallery() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, REQ_CODE_PICK_IMAGE);
-    }
-
-    @Override
-    public void onDisplayFullScreen(String path) {
+    public void navigateToDisplayOnFullScreen(String path) {
         Bundle bundle=new Bundle();
         bundle.putString(MainActivity.PHOTO_PATH_KEY,path);
         imageFragment= new FullScreenImageFragment();
@@ -172,17 +163,11 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
-            File photoFile = null;
-            //TODO create photofile in the Model
-            try {
-                photoFile = ImageFileManager.getImageFileManager().createImageFile(NAMETAG_REGULAR);
-                mCurrentPhotoPath=photoFile.getAbsolutePath();
-                mCurrentPhotoName = photoFile.getName();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
+            File photoFile = presenter.createImageFileBlank();
             // Continue only if the File was successfully created
             if (photoFile != null) {
+                mCurrentPhotoPath=photoFile.getAbsolutePath();
+                mCurrentPhotoName = photoFile.getName();
                 takePictureIntent.putExtra(
                         MediaStore.EXTRA_OUTPUT,
                         Uri.fromFile(photoFile));

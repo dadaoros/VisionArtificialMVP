@@ -1,5 +1,7 @@
 package com.mugen.visionartificial.Presenter;
 
+import android.os.AsyncTask;
+
 import com.mugen.visionartificial.Model.ImageFileManager;
 import com.mugen.visionartificial.Model.Photo;
 import com.mugen.visionartificial.R;
@@ -21,10 +23,22 @@ public class PhotosListPresenter implements PresenterOps.PhotosListOps {
 
     @Override
     public void loadPhotos() {
-        List<Photo> selfies=imageFileManager.getSelfies();
-        if(selfies!=null && !selfies.isEmpty()) {
-            view.get().onPhotosLoadSuccess(selfies, String.valueOf(R.string.photolistload_success));
-        }else
-            view.get().onPhotosLoadFailed(String.valueOf(R.string.photolistload_fail));
+        new AsyncTask<Void,Void,List>() {
+
+            @Override
+            protected List doInBackground(Void... voids) {
+                List<Photo> selfies=imageFileManager.getPhotos();
+                return selfies;
+            }
+            @Override
+            protected void onPostExecute(List selfies){
+                if(selfies!=null && !selfies.isEmpty()) {
+                    view.get().onPhotosLoadSuccess(selfies, String.valueOf(R.string.photolistload_success));
+                }else
+                    view.get().onPhotosLoadFailed(String.valueOf(R.string.photolistload_fail));
+            }
+        }.execute();
+
     }
+
 }

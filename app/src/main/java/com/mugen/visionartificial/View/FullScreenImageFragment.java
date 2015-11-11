@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -49,20 +48,21 @@ public class FullScreenImageFragment extends Fragment implements ViewOps.FullScr
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =inflater.inflate(R.layout.fragment_full_screen_image, container, false);
+        imageView = (ImageView) view.findViewById(R.id.full_screen_imageview);
         btnClose= (ImageButton)view.findViewById(R.id.btnExit);
         bordersBtn=(ImageButton)view.findViewById(R.id.button_borders);
         lettersBtn=(ImageButton)view.findViewById(R.id.button_letters);
         bordersBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.findBorders(pixelImage, false);
+                presenter.findAndReplaceBorders(pixelImage, false);
 
             }
         });
         lettersBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.findBorders(pixelImage, true);
+                presenter.findAndReplaceBorders(pixelImage, true);
 
             }
         });
@@ -72,17 +72,12 @@ public class FullScreenImageFragment extends Fragment implements ViewOps.FullScr
                 getActivity().onBackPressed();
             }
         });
-
+        presenter.convertToGrayScale(pixelImage);
         return view ;
     }
     @Override
     public void onResume(){
         super.onResume();
-        if(imageView==null) {
-            imageView = (ImageView) getActivity().findViewById(R.id.full_screen_imageview);
-
-            presenter.toGrayScale(pixelImage);
-        }
     }
 
     public void onPause(){

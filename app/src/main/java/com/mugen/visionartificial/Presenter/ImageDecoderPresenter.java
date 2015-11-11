@@ -10,14 +10,15 @@ import java.lang.ref.WeakReference;
 /**
  * Created by ORTEGON on 05/11/2015.
  */
-public class ImageDecoderPresenter {
+public class ImageDecoderPresenter implements PresenterOps.FullScreenOps {
     public WeakReference<ViewOps.FullScreenOps> mView;
     public static String TAG="ImagePresenter";
     public ImageDecoderPresenter(ViewOps.FullScreenOps view){
         mView = new WeakReference<>(view);
 
     }
-    public void toGrayScale(PixelImage image){
+    @Override
+    public void convertToGrayScale(PixelImage image){
         Log.d(TAG, "togray");
 
         try {
@@ -27,9 +28,10 @@ public class ImageDecoderPresenter {
 
         }
     }
-
-    public void findBorders(PixelImage pixelImage, boolean withLetters) {
+    @Override
+    public void findAndReplaceBorders(PixelImage pixelImage, boolean withLetters) {
         BorderFinder bF=new BorderFinder(pixelImage,withLetters,this);
         bF.execute();
     }
+
 }

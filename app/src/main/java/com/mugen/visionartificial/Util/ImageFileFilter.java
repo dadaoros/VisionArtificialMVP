@@ -6,7 +6,7 @@ import java.io.FileFilter;
 /**
  * Created by root on 21/03/15.
  */
-public class SelfieFileFilter implements FileFilter {
+public class ImageFileFilter implements FileFilter {
     @Override
     public boolean accept(File pathname) {
         if ((pathname.getName().contains("GRAY") || pathname.getName().contains("REGULAR"))  && pathname.length()>0){

@@ -17,8 +17,9 @@ import java.lang.ref.WeakReference;
  */
 public class MainOpsPresenter implements PresenterOps.MainViewOps{
     public WeakReference<ViewOps.MainViewOps> mView;
+    public ImageFileManager imageFileManager;
     public static String TAG="ImagePresenter";
-    ImageFileManager imageFileManager;
+
     public MainOpsPresenter(ViewOps.MainViewOps view){
         mView = new WeakReference<>(view);
         imageFileManager=ImageFileManager.getImageFileManager();
@@ -32,6 +33,17 @@ public class MainOpsPresenter implements PresenterOps.MainViewOps{
             mView.get().onPhotoSaveResult("Picture Saved Successfully");
         }catch (IOException e){
             mView.get().onPhotoSaveResult("Your Picture was not saved");
+        }
+    }
+
+    @Override
+    public File createImageFileBlank() {
+        File photoFile;
+        try {
+            photoFile = imageFileManager.createImageFile(ImageFileManager.NAMETAG_REGULAR);
+            return photoFile;
+        }catch (Exception e){
+            return null;
         }
     }
 
