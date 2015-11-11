@@ -31,7 +31,7 @@ public class MainOpsPresenter implements PresenterOps.MainViewOps{
             String newPath = ImageFileManager.getImageFileManager().savePhoto(bitmap, fName, p.getFlag());
             mView.get().addPicturetoGallery(Uri.fromFile(new File(newPath)));
             mView.get().onPhotoSaveResult("Picture Saved Successfully");
-        }catch (IOException e){
+        }catch (Exception e){
             mView.get().onPhotoSaveResult("Your Picture was not saved");
         }
     }

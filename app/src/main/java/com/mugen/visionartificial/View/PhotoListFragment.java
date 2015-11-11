@@ -62,7 +62,7 @@ public class PhotoListFragment extends Fragment implements ViewOps.PhotoListOps{
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((MainActivity) getActivity()).onDisplayFullScreen(((Photo) listView.getAdapter().getItem(position)).getPath());
+                ((MainActivity) getActivity()).navigateToDisplayOnFullScreen(((Photo) listView.getAdapter().getItem(position)).getPath());
             }
         });
     }

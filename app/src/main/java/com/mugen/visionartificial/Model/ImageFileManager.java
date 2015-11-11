@@ -83,6 +83,7 @@ public class ImageFileManager implements ModelOps{
             fOut.close(); // do not forget to close the stream
         }catch (IOException e){
             Log.e(TAG,e.getMessage());
+
         }
         return file.getAbsolutePath();
         //MediaStore.Images.Media.insertImage(getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
