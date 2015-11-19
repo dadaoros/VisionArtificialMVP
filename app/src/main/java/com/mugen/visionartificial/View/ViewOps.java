@@ -24,6 +24,6 @@ public interface ViewOps {
     }
     interface PhotoListOps extends ContextView{
         public void onPhotosLoadSuccess(List photoList,String response);
-        public void onPhotosLoadFailed(String response);
+        public void displayPhotosLoadFailed();
     }
 }

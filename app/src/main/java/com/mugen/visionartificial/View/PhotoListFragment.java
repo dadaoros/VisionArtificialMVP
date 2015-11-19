@@ -54,8 +54,8 @@ public class PhotoListFragment extends Fragment implements ViewOps.PhotoListOps{
     }
 
     @Override
-    public void onPhotosLoadFailed(String response) {
-        Toast.makeText(getActivity(),response,Toast.LENGTH_LONG).show();
+    public void displayPhotosLoadFailed() {
+        Toast.makeText(getActivity(),R.string.photolistload_fail,Toast.LENGTH_SHORT).show();
     }
     public void setListener(final ListView listView){
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

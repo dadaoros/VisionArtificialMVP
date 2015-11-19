@@ -35,7 +35,7 @@ public class PhotosListPresenter implements PresenterOps.PhotosListOps {
                 if(selfies!=null && !selfies.isEmpty()) {
                     view.get().onPhotosLoadSuccess(selfies, String.valueOf(R.string.photolistload_success));
                 }else
-                    view.get().onPhotosLoadFailed(String.valueOf(R.string.photolistload_fail));
+                    view.get().displayPhotosLoadFailed();
             }
         }.execute();
 

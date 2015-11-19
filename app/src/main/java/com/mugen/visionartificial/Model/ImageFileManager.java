@@ -27,6 +27,9 @@ public class ImageFileManager implements ModelOps{
     private static ImageFileManager imageFileManager=new ImageFileManager();
     private static File STORAGE_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     private static final String TAG = "ImageFileManager";
+    private ImageFileManager(){
+        //private empty constructor
+    }
     @Override
     public List<Photo> getPhotos() {
 

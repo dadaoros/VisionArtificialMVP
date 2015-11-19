@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_PICK_IMAGE:
-                    navigateToDisplayOnFullScreen(getRealImagePath(data.getData()));
+                    navigateToDisplayOnFullScreen(getImagePathFromUri(data.getData()));
                     break;
                 case REQUEST_TAKE_PHOTO:
                     navigateToDisplayOnFullScreen(mCurrentPhotoPath);
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
             }
         }
     }
-    public String getRealImagePath(Uri selectedImage){
+    public String getImagePathFromUri(Uri selectedImage){
         String[] filePathColumn = {MediaStore.Images.Media.DATA};
         Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
         cursor.moveToFirst();
