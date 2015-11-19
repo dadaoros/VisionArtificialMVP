@@ -11,24 +11,31 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.mugen.visionartificial.Model.Photo;
+import com.mugen.visionartificial.Presenter.MainOpsPresenter;
 import com.mugen.visionartificial.Presenter.PhotosListPresenter;
+import com.mugen.visionartificial.Presenter.ProvidedPresenterOps;
 import com.mugen.visionartificial.R;
+import com.mugen.visionartificial.common.GenericFragment;
+
 import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PhotoListFragment extends Fragment implements ViewOps.PhotoListOps{
-    public static final String BUNDLE_KEY="bundle key";
-    private static final String TAG = "PhotoList_Fragment";
+public class PhotoListFragment
+        extends GenericFragment <RequiredViewOps.PhotoListOps,
+        ProvidedPresenterOps.PhotosListOps,
+        PhotosListPresenter>
+        implements RequiredViewOps.PhotoListOps{
+
     ListView selfieListView;
-    PhotosListPresenter presenter;
+
     public PhotoListFragment() {
         // Required empty public constructor
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter=new PhotosListPresenter(this);
+        super.onCreate(PhotosListPresenter.class,this);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,7 +48,7 @@ public class PhotoListFragment extends Fragment implements ViewOps.PhotoListOps{
     }
     public void onResume() {
         super.onResume();
-        presenter.loadPhotos();
+        getPresenter().loadPhotos();
     }
 
     @Override

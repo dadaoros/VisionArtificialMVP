@@ -2,20 +2,37 @@ package com.mugen.visionartificial.Presenter;
 
 import android.util.Log;
 
+import com.mugen.visionartificial.Model.ImageFileManager;
 import com.mugen.visionartificial.Model.PixelImage;
-import com.mugen.visionartificial.View.ViewOps;
+import com.mugen.visionartificial.Model.ProvidedModelOps;
+import com.mugen.visionartificial.View.RequiredViewOps;
+import com.mugen.visionartificial.common.GenericPresenter;
 
 import java.lang.ref.WeakReference;
 
 /**
  * Created by ORTEGON on 05/11/2015.
  */
-public class ImageDecoderPresenter implements PresenterOps.FullScreenOps {
-    public WeakReference<ViewOps.FullScreenOps> mView;
+public class ImageDecoderPresenter
+        extends GenericPresenter<RequiredPresenterOps,ProvidedModelOps,ImageFileManager>
+        implements ProvidedPresenterOps.FullScreenOps {
+
+    public WeakReference<RequiredViewOps.FullScreenOps> mView;
     public static String TAG="ImagePresenter";
-    public ImageDecoderPresenter(ViewOps.FullScreenOps view){
+
+    @Override
+    public void onCreate(RequiredViewOps.FullScreenOps view) {
+        mView = new WeakReference<>(view);
+    }
+    @Override
+    public void onConfigurationChange(RequiredViewOps.FullScreenOps view) {
         mView = new WeakReference<>(view);
 
+    }
+
+    @Override
+    public void onDestroy(boolean isChangingConfigurations) {
+        getModel().onDestroy(isChangingConfigurations);
     }
     @Override
     public void convertToGrayScale(PixelImage image){

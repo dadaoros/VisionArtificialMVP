@@ -1,9 +1,9 @@
 package com.mugen.visionartificial.common;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
@@ -38,15 +38,15 @@ public class RetainedFragmentManager {
 
     /**
      * Constructor initializes fields.
-     */ 
-    public RetainedFragmentManager(FragmentManager fragmentManager,
-                                   String retainedFragmentTag) {
+     */
+
+    public RetainedFragmentManager(android.support.v4.app.FragmentManager fragmentManager, String tag) {
         // Store a WeakReference to the Activity.
         mFragmentManager =
-            new WeakReference<FragmentManager>(fragmentManager);
+                new WeakReference<FragmentManager>(fragmentManager);
 
         // Store the tag used to identify the RetainedFragment.
-        mRetainedFragmentTag = retainedFragmentTag;
+        mRetainedFragmentTag = tag;
     }
 
     /**

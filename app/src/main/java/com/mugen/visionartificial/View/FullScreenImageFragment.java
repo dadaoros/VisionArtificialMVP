@@ -20,7 +20,7 @@ import com.mugen.visionartificial.Presenter.ImageFilterTask;
 import com.mugen.visionartificial.R;
 
 
-public class FullScreenImageFragment extends Fragment implements ViewOps.FullScreenOps{
+public class FullScreenImageFragment extends Fragment implements RequiredViewOps.FullScreenOps{
     private static final String TAG = "FullScreenF";
     public ProgressDialog pDialog;
     ImageView imageView;
@@ -33,7 +33,6 @@ public class FullScreenImageFragment extends Fragment implements ViewOps.FullScr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter=new ImageDecoderPresenter(this);
 
         setHasOptionsMenu(true);
 

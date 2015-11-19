@@ -1,6 +1,7 @@
 package com.mugen.visionartificial.common;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 /**
@@ -25,17 +26,20 @@ import android.util.Log;
  *     GenericActivity framework to implement an Presenter object.</li>
  * </ol>
  */
-public abstract class GenericActivity<RequiredViewOps,
+public abstract class GenericFragment<RequiredViewOps,
                                       ProvidedPresenterOps,
                                       PresenterType extends PresenterOps<RequiredViewOps>>
-       extends LifecycleLoggingActivity
+       extends Fragment
        implements ContextView {
+
     /**
      * Used to retain the ProvidedPresenterOps state between runtime
      * configuration changes.
      */
-    private final RetainedFragmentManager mRetainedFragmentManager 
-        = new RetainedFragmentManager(this.getSupportFragmentManager(),
+    protected final String TAG =
+            getClass().getSimpleName();
+    private final RetainedFragmentManager mRetainedFragmentManager
+        = new RetainedFragmentManager(this.getFragmentManager(),
                                       TAG);
  
     /**
@@ -117,7 +121,11 @@ public abstract class GenericActivity<RequiredViewOps,
                             RequiredViewOps view)
             throws InstantiationException, IllegalAccessException {
         // Create the PresenterType object.
-        mPresenterInstance = opsType.newInstance();
+        try {
+            mPresenterInstance = opsType.newInstance();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        }
 
         // Put the PresenterInstance into the RetainedFragmentManager under
         // the simple name.
@@ -160,7 +168,7 @@ public abstract class GenericActivity<RequiredViewOps,
      */
     @Override
     public Context getActivityContext() {
-        return this;
+        return getActivity();
     }
     
     /**
@@ -168,7 +176,7 @@ public abstract class GenericActivity<RequiredViewOps,
      */
     @Override
     public Context getApplicationContext() {
-        return super.getApplicationContext();
+        return getApplicationContext();
     }
 }
 

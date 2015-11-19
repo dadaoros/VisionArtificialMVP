@@ -13,16 +13,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.mugen.visionartificial.Model.ImageFileManager;
-import com.mugen.visionartificial.Model.PixelImage;
 import com.mugen.visionartificial.Presenter.MainOpsPresenter;
-import com.mugen.visionartificial.Presenter.PresenterOps;
+import com.mugen.visionartificial.Presenter.ProvidedPresenterOps;
 import com.mugen.visionartificial.R;
+import com.mugen.visionartificial.common.GenericActivity;
 
 import java.io.File;
-import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements ViewOps.MainViewOps,ContextView{
+public class MainActivity
+        extends GenericActivity<RequiredViewOps.MainViewOps,
+                ProvidedPresenterOps.MainViewOps,
+                MainOpsPresenter>
+        implements RequiredViewOps.MainViewOps,ContextView{
     static final String TAG="Main Activity";
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int REQ_CODE_PICK_IMAGE=2;
@@ -31,16 +33,15 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
     String mCurrentPhotoPath;
     String mCurrentPhotoName;
     FullScreenImageFragment imageFragment;
-    MainOpsPresenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initialize();
+        super.onCreate(MainOpsPresenter.class, this);
 
     }
     private void initialize(){
-        presenter=new MainOpsPresenter(this);
         if(listFragment==null) {
             listFragment = new PhotoListFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
     }
     private void onSaveActualPhoto() {
         if(imageFragment!=null) {
-            presenter.saveActualPhoto(imageFragment.getPixelImage(),imageFragment.getActualBitmap());
+            getPresenter().saveActualPhoto(imageFragment.getPixelImage(),imageFragment.getActualBitmap());
         }
     }
     @Override
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
-            File photoFile = presenter.createImageFileBlank();
+            File photoFile = getPresenter().createImageFileBlank();
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 mCurrentPhotoPath=photoFile.getAbsolutePath();

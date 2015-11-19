@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by ORTEGON on 05/11/2015.
  */
-public interface ViewOps {
+public interface RequiredViewOps {
     interface MainViewOps extends ContextView{
         void navigateToDisplayOnFullScreen(String path);
         void onPhotoSaveResult(String message);

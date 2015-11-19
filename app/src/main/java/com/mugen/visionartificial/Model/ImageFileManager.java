@@ -5,13 +5,16 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
+import com.mugen.visionartificial.Presenter.RequiredPresenterOps;
 import com.mugen.visionartificial.Util.ImageFileFilter;
+import com.mugen.visionartificial.common.ModelOps;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,15 +23,25 @@ import java.util.List;
 /**
  * Created by root on 21/03/15.
  */
-public class ImageFileManager implements ModelOps{
+public class ImageFileManager implements ProvidedModelOps {
     public static final String NAMETAG_REGULAR="REGULAR";
     public static final int THUMB_DIM =50;
 
-    private static ImageFileManager imageFileManager=new ImageFileManager();
+    //private static ImageFileManager imageFileManager=new ImageFileManager();
     private static File STORAGE_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-    private static final String TAG = "ImageFileManager";
-    private ImageFileManager(){
-        //private empty constructor
+    private static final String TAG = ImageFileManager.class.getName();
+    WeakReference<RequiredPresenterOps> mPresenter;
+
+
+    @Override
+    public void onCreate(RequiredPresenterOps presenter) {
+        mPresenter =
+                new WeakReference<>(presenter);
+    }
+
+    @Override
+    public void onDestroy(boolean isChangingConfigurations) {
+
     }
     @Override
     public List<Photo> getPhotos() {
@@ -92,10 +105,11 @@ public class ImageFileManager implements ModelOps{
         //MediaStore.Images.Media.insertImage(getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
     }
 
-
+/*
     public static ImageFileManager getImageFileManager(){
         return imageFileManager;
     }
+    */
     private Bitmap getThumbnail(String photoPath) {
 // Get the dimensions of the View
         int targetW = THUMB_DIM;
@@ -114,5 +128,6 @@ public class ImageFileManager implements ModelOps{
         bmOptions.inPurgeable = true;
         return BitmapFactory.decodeFile(photoPath, bmOptions);
     }
+
 
 }
