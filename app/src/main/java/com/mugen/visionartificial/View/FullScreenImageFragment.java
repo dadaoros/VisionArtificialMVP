@@ -21,7 +21,7 @@ import com.mugen.visionartificial.R;
 
 
 public class FullScreenImageFragment extends Fragment implements ViewOps.FullScreenOps{
-    private static final String TAG = "FullScreenF";
+    private final String TAG = this.getClass().getName();
     public ProgressDialog pDialog;
     ImageView imageView;
     ImageButton btnClose;

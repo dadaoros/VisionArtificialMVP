@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by root on 21/03/15.
  */
@@ -27,7 +29,8 @@ public class ImageFileManager implements ModelOps{
     private static ImageFileManager imageFileManager=new ImageFileManager();
     private static File STORAGE_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     private static final String TAG = "ImageFileManager";
-    private ImageFileManager(){
+
+    public ImageFileManager(){
         //private empty constructor
     }
     @Override

@@ -12,8 +12,8 @@ import java.util.List;
 public interface ViewOps {
     interface MainViewOps extends ContextView{
         void navigateToDisplayOnFullScreen(String path);
-        void onPhotoSaveResult(String message);
-        void onPhotoAttemptFailed(String Message);
+        void displayPhotoSaveResult(String message);
+        void displayPhotoAttemptFailed(String Message);
         void addPicturetoGallery(Uri uri);
     }
     interface FullScreenOps extends ContextView{
@@ -25,5 +25,7 @@ public interface ViewOps {
     interface PhotoListOps extends ContextView{
         public void onPhotosLoadSuccess(List photoList,String response);
         public void displayPhotosLoadFailed();
+
+
     }
 }

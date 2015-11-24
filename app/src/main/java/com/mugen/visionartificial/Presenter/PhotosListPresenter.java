@@ -10,15 +10,19 @@ import com.mugen.visionartificial.View.ViewOps;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by ORTEGON on 09/11/2015.
  */
 public class PhotosListPresenter implements PresenterOps.PhotosListOps {
+
     private ImageFileManager imageFileManager;
     WeakReference<ViewOps.PhotoListOps> view;
-    public PhotosListPresenter(ViewOps.PhotoListOps view) {
+    @Inject
+    public PhotosListPresenter(ViewOps.PhotoListOps view, ImageFileManager interactor) {
         this.view=new WeakReference<ViewOps.PhotoListOps>(view);
-        imageFileManager=ImageFileManager.getImageFileManager();
+        imageFileManager=interactor;
     }
 
     @Override

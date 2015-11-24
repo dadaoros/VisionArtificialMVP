@@ -10,10 +10,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.mugen.visionartificial.Components.DaggerPhotoListComponent;
 import com.mugen.visionartificial.Model.Photo;
+import com.mugen.visionartificial.Modules.PhotoListModule;
+import com.mugen.visionartificial.PhotoFilterApp;
 import com.mugen.visionartificial.Presenter.PhotosListPresenter;
+import com.mugen.visionartificial.Presenter.PresenterOps;
 import com.mugen.visionartificial.R;
 import java.util.List;
+
+import javax.inject.Inject;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -21,14 +29,18 @@ public class PhotoListFragment extends Fragment implements ViewOps.PhotoListOps{
     public static final String BUNDLE_KEY="bundle key";
     private static final String TAG = "PhotoList_Fragment";
     ListView selfieListView;
-    PhotosListPresenter presenter;
+    @Inject
+    PresenterOps.PhotosListOps presenter;
     public PhotoListFragment() {
         // Required empty public constructor
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter=new PhotosListPresenter(this);
+        DaggerPhotoListComponent.builder().photoFilterComponent(PhotoFilterApp.getApp(getActivity())
+                .getComponent())
+                .photoListModule(new PhotoListModule(this))
+                .build().inject(this);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

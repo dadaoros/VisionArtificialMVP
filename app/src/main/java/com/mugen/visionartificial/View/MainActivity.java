@@ -13,14 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.mugen.visionartificial.Model.ImageFileManager;
-import com.mugen.visionartificial.Model.PixelImage;
 import com.mugen.visionartificial.Presenter.MainOpsPresenter;
-import com.mugen.visionartificial.Presenter.PresenterOps;
 import com.mugen.visionartificial.R;
 
 import java.io.File;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements ViewOps.MainViewOps,ContextView{
     static final String TAG="Main Activity";
@@ -95,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
                 navigateToPickImageFromGallery();
                 return true;
             case R.id.action_save_item:
-                onSaveActualPhoto();
+                saveActualPhoto();
                 return true;
             case R.id.action_settings:
                 return true;
@@ -103,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
                 return super.onOptionsItemSelected(item);
         }
     }
-    private void onSaveActualPhoto() {
+    private void saveActualPhoto() {
         if(imageFragment!=null) {
             presenter.saveActualPhoto(imageFragment.getPixelImage(),imageFragment.getActualBitmap());
         }
@@ -117,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
         }
     }
     @Override
-    public void onPhotoAttemptFailed(String message) {
+    public void displayPhotoAttemptFailed(String message) {
         Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
     }
 
@@ -131,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
             dispatchTakePictureIntent();
             addPicturetoGallery(Uri.fromFile(new File(mCurrentPhotoPath)));
         }else{
-            onPhotoAttemptFailed("You need a Camera if you want to take a picture");
+            displayPhotoAttemptFailed("You need a Camera if you want to take a picture");
         }
     }
     @Override
@@ -147,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements ViewOps.MainViewO
     }
 
     @Override
-    public void onPhotoSaveResult(String message) {
+    public void displayPhotoSaveResult(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
